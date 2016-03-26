@@ -29,7 +29,7 @@ class Menu(Resource):
     def get(self):
         return jsonify({'tasks': tasks})
 
-api.add_resource(Menu,'/amritatoday/api/v1.0/menu')
+api.add_resource(Menu,'/api/v1.0/menu')
 
 if __name__ == '__main__':
     app.run(debug=True)
