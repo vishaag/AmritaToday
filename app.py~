@@ -6,31 +6,27 @@ from flask_restful import Api, Resource
 app = Flask(__name__)
 api = Api(app)
 
-tasks = [
+menu = [
     {
         'id': 1,
         'item': u'Chappathi Channa',
-        'price': u'10+20', 
-        'done': False
+        'price': u'10+20'
     },
     {
         'id': 2,
         'item': u'Apple MilkShake',
-        'price': u'50', 
-        'done': False
+        'price': u'50'
     },
 
     {
         'id': 3,
         'item': u'Namkeen',
-        'price': u'10', 
-        'done': False
+        'price': u'10'
     },
     {
         'id': 4,
         'item': u'Lays',
-        'price': u'10', 
-        'done': False
+        'price': u'10'
     }
 ]
 
@@ -40,7 +36,7 @@ tasks = [
 
 class Menu(Resource):
     def get(self):
-        return jsonify({'tasks': tasks})
+        return jsonify({'menu': menu})
 
 api.add_resource(Menu,'/api/v1.0/menu')
 
