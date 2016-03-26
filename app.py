@@ -25,6 +25,12 @@ tasks = [
         'item': u'Namkeen',
         'price': u'10', 
         'done': False
+    },
+    {
+        'id': 4,
+        'item': u'Lays',
+        'price': u'10', 
+        'done': False
     }
 ]
 
