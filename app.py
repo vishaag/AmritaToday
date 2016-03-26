@@ -19,6 +19,13 @@ tasks = [
         'price': u'50', 
         'done': False
     }
+
+    {
+        'id': 3,
+        'item': u'Namkeen',
+        'price': u'10', 
+        'done': False
+    }
 ]
 
 # @app.route('/amritatoday/api/v1.0/menu', methods=['GET'])
