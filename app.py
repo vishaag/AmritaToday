@@ -18,7 +18,7 @@ tasks = [
         'item': u'Apple MilkShake',
         'price': u'50', 
         'done': False
-    }
+    },
 
     {
         'id': 3,
