@@ -3,28 +3,13 @@ from flask import Flask, jsonify
 from flask_restful import Api, Resource
 from flask.ext.sqlalchemy import SQLAlchemy
 import json
-
+import os
 
 
 app = Flask(__name__)
 api = Api(app)
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
-
-import os
-import psycopg2
-import urlparse
-
-urlparse.uses_netloc.append("postgres")
-url = urlparse.urlparse(os.environ["DATABASE_URL"])
-
-conn = psycopg2.connect(
-    database=url.path[1:],
-    user=url.username,
-    password=url.password,
-    host=url.hostname,
-    port=url.port
-)
 
 
 class Menu(db.Model):
