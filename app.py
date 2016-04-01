@@ -14,11 +14,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 
 
+#Things TODO
+#1. Default value for rating and event count.
+
+
 ##########################################################################################
 # DB CLASS MODELS #
 ##########################################################################################
 
-
+#Canteen Class models
 class Main(db.Model):
     __tablename__ = "main"
     id = db.Column(db.Integer, primary_key=True)
@@ -42,12 +46,29 @@ class IT(db.Model):
     price = db.Column(db.Integer)
     rating = db.Column(db.Float)
     category = db.Column(db.String(20))
+#End of Canteen Class models
+
+
+#ClubEvent Class models
+class ClubEvents(db.Model):
+    __tablename__ = "clubevents"
+    id = db.Column(db.Integer, primary_key=True)
+    club = db.Column(db.String(20), unique=True)
+    event = db.Column(db.String(20))
+    description = db.Column(db.String(1000))
+    date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
+    venue = db.Column(db.String(20))
+    poster = db.Column(db.String(200))
+    count = db.Column(db.Integer)
+#End of ClubEvent Class models
 
 
 ##########################################################################################
 # HTTP verbs' definitions #
 ##########################################################################################
 
+#Start Canteen Defintions
 #GET (LIST) and POST ONLY
 
 class MainMenuListAPI(Resource):
@@ -178,11 +199,72 @@ class ITMenuAPI(Resource):
         IT.query.filter_by(id=id).delete()
         db.session.commit()
         return 201 #Remember to return error code if entry is NOT deleted from DB
+#End of Canteen Definitions
+
+
+#Start of ClubEvent Defintions
+#GET (LIST) and POST ONLY
+class ClubEventsListAPI(Resource):
+    def get(self):
+        Events=[]
+        for u in ClubEvents.query.all():
+            Events.append(u.__dict__)
+        for i in range(len(Events)):
+            del Events[i]['_sa_instance_state'] #Delete uncessary parameter in return object
+        return jsonify({'Events':(Events) })     
+
+    def post(self):
+        data = request.json
+        club = data['club']
+        event = data['event']
+        description = data['description']
+        date = data['date']
+        end_date = data['end_date']
+        venue = data['venue']
+        poster = data['poster']
+
+        ClubEventsADD = ClubEvents(club=club,event=event,description=description,date=date,end_date=end_date,venue=venue,poster=poster)
+        db.session.add(ClubEventsADD)
+        db.session.commit()
+        return 201
+
+#GET (ID), PUT, DELETE
+class ClubEventsAPI(Resource):
+    def get(self,id):
+        Events=[]
+        Events.append(ClubEvents.query.filter_by(id=id).first().__dict__)
+        del Events[0]['_sa_instance_state'] #Delete uncessary parameter in return object
+        return jsonify({'Events':(Events) })
+
+    def put(self,id):    
+        data=request.json
+        ClubEventsUpdate = ClubEvents.query.filter_by(id=id).first()
+        ClubEventsUpdate.club = data['club']
+        ClubEventsUpdate.event = data['event']
+        ClubEventsUpdate.description = data['description']
+        ClubEventsUpdate.date = data['date']
+        ClubEventsUpdate.end_date = data['end_date']
+        ClubEventsUpdate.venue = data['venue']
+        ClubEventsUpdate.poster = data['poster']
+
+        db.session.add(ClubEventsUpdate)
+        db.session.commit()
+        return 201
+
+    def delete(self,id):
+        ClubEvents.query.filter_by(id=id).delete()
+        db.session.commit()
+        return 201 #Remember to return error code if entry is NOT deleted from DB
+#End of ClubEvent Defintions
+
+
 
 
 ##########################################################################################
 # Routes #
 ##########################################################################################
+
+##CANTEEN
 
 #GET (LIST), POST 
 api.add_resource(MainMenuListAPI,'/api/v1.0/menu/main')
@@ -193,6 +275,15 @@ api.add_resource(ITMenuListAPI,'/api/v1.0/menu/it')
 api.add_resource(MainMenuAPI,'/api/v1.0/menu/main/<int:id>')
 api.add_resource(MBAMenuAPI,'/api/v1.0/menu/mba/<int:id>')
 api.add_resource(ITMenuAPI,'/api/v1.0/menu/it/<int:id>')
+
+##END CANTEEN APIS
+
+##CLUBS
+#GET (LIST), POST 
+api.add_resource(ClubEventsListAPI,'/api/v1.0/events')
+#GET (ID), PUT, DELETE
+api.add_resource(ClubEventsAPI,'/api/v1.0/events/<int:id>')
+##END CLUBS APIS
 
 if __name__ == '__main__':
     app.run(debug=True)
