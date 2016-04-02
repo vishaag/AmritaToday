@@ -1,6 +1,7 @@
 #!flask/bin/python
 from flask import Flask, jsonify
 from flask import request
+from flask_restful import reqparse #For get query params
 from flask_restful import Api, Resource
 from flask.ext.sqlalchemy import SQLAlchemy
 import json
@@ -16,6 +17,9 @@ db = SQLAlchemy(app)
 
 #Things TODO
 #1. Default value for rating and event count.
+#2. Count functionality
+
+#3. PUT, DELETE FOR Clubs (add/delete new clubs)
 
 
 ##########################################################################################
@@ -49,6 +53,14 @@ class IT(db.Model):
 #End of Canteen Class models
 
 
+#Clubs Class models
+class Clubs(db.Model):
+    __tablename__ = "clubs"
+    id = db.Column(db.Integer, primary_key=True)
+    club = db.Column(db.String(20), unique=True)
+#End of Clubs Class models
+
+
 #ClubEvent Class models
 class ClubEvents(db.Model):
     __tablename__ = "clubevents"
@@ -70,7 +82,6 @@ class ClubEvents(db.Model):
 
 #Start Canteen Defintions
 #GET (LIST) and POST ONLY
-
 class MainMenuListAPI(Resource):
     def get(self):
         Menu=[]
@@ -202,13 +213,41 @@ class ITMenuAPI(Resource):
 #End of Canteen Definitions
 
 
-#Start of ClubEvent Defintions
+
+#Start of Clubs Definition
+#GET ONLY
+class ClubsListAPI(Resource):
+    def get(self):
+        ClubList=[]
+        for u in Clubs.query.all():
+            ClubList.append(u.__dict__)
+        for i in range(len(ClubList)):
+            del ClubList[i]['_sa_instance_state'] #Delete uncessary parameter in return object
+        return jsonify({'Clubs':(ClubList) })      
+#End of Clubs Definition
+
+
+#Start of ClubEvents Defintions
 #GET (LIST) and POST ONLY
 class ClubEventsListAPI(Resource):
     def get(self):
         Events=[]
-        for u in ClubEvents.query.all():
-            Events.append(u.__dict__)
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('club', action='append')
+        args = parser.parse_args()
+
+        if args.club is not None:
+            ClubIDs = []        
+            ClubIDs = list(args.club)
+
+            for u in ClubEvents.query.filter(ClubEvents.club.in_(ClubIDs)).all():
+                Events.append(u.__dict__)
+
+        else:
+            for u in ClubEvents.query.all():
+                Events.append(u.__dict__)    
+
         for i in range(len(Events)):
             del Events[i]['_sa_instance_state'] #Delete uncessary parameter in return object
         return jsonify({'Events':(Events) })     
@@ -257,6 +296,10 @@ class ClubEventsAPI(Resource):
         return 201 #Remember to return error code if entry is NOT deleted from DB
 #End of ClubEvent Defintions
 
+#Start of BuySell Definitions
+
+#End of BuySell Definitions
+
 
 
 
@@ -270,20 +313,32 @@ class ClubEventsAPI(Resource):
 api.add_resource(MainMenuListAPI,'/api/v1.0/menu/main')
 api.add_resource(MBAMenuListAPI,'/api/v1.0/menu/mba')
 api.add_resource(ITMenuListAPI,'/api/v1.0/menu/it')
-
 #GET (ID), PUT, DELETE
 api.add_resource(MainMenuAPI,'/api/v1.0/menu/main/<int:id>')
 api.add_resource(MBAMenuAPI,'/api/v1.0/menu/mba/<int:id>')
 api.add_resource(ITMenuAPI,'/api/v1.0/menu/it/<int:id>')
-
 ##END CANTEEN APIS
 
+
 ##CLUBS
+
 #GET (LIST), POST 
-api.add_resource(ClubEventsListAPI,'/api/v1.0/events')
+api.add_resource(ClubEventsListAPI,'/api/v1.0/events') #list of all events eg: /api/v1.0/events returns all events. Or, eg: /api/v1.0/events?club=T{know} returns events of T{know} alone
+
 #GET (ID), PUT, DELETE
-api.add_resource(ClubEventsAPI,'/api/v1.0/events/<int:id>')
+api.add_resource(ClubEventsAPI,'/api/v1.0/events/<int:id>') #events based on id
+git
+#GET ONLY - ClusListAPI
+api.add_resource(ClubsListAPI,'/api/v1.0/clubs')  #for list of clubs
+
+
 ##END CLUBS APIS
+    
+
+##BUYSELL
+
+
+##END BUY SELL APIS
 
 if __name__ == '__main__':
     app.run(debug=True)
