@@ -15,7 +15,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 
 
-#Things TODO
+#ThingsTODO
 #1. Default value for rating and event count.
 #2. Count functionality
 
