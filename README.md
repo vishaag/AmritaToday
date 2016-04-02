@@ -35,4 +35,4 @@ AmritaToday's backend is built using the python web framework Flask. It is curre
   
   >Eg: https://amritatoday.herokuapp.com/api/v1.0/events?club=Srishti
   
-
+  >Eg: https://amritatoday.herokuapp.com/api/v1.0/events?club=Srishti&club=Sahaya
