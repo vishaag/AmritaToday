@@ -10,8 +10,8 @@ import os
 
 app = Flask(__name__)
 api = Api(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/amritatoday'
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/amritatoday'
 db = SQLAlchemy(app)
 
 
@@ -327,7 +327,6 @@ api.add_resource(ClubEventsListAPI,'/api/v1.0/events') #list of all events eg: /
 
 #GET (ID), PUT, DELETE
 api.add_resource(ClubEventsAPI,'/api/v1.0/events/<int:id>') #events based on id
-git
 #GET ONLY - ClusListAPI
 api.add_resource(ClubsListAPI,'/api/v1.0/clubs')  #for list of clubs
 
