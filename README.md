@@ -1,5 +1,5 @@
 # AmritaToday
-AmritaToday as an Android based application which connects the people in Amrita in the most essential ways possible. This repository contains the source code of the application's RESTful API.
+AmritaToday is an Android based application which connects the people in Amrita in the most essential ways possible. This repository contains the source code of the application's RESTful API.
 
 1. Canteen Menu APIs - A crowdsource based implementation for anyone in Amrita to see and post data about the present items availabe in all 3 canteens.(v1.0 implemented)
 2. Clubs@Amrita - Enables everyone to view the upcoming events by various clubs at Amrita. Also provides heads of clubs to create new events.(v1.0 implemented)
