@@ -58,7 +58,7 @@ AmritaToday's backend is built using the python web framework Flask. It is curre
   
   ```
   {
-        "club": "Sahaya", 
+        "club": "Srishti", 
         "event": "Mime",
         "description": "Fun and Frolic!",
         "date": "Tue, 12 Apr 2016 07:00:00 GMT", 
