@@ -21,7 +21,7 @@ AmritaToday's backend is built using the python web framework Flask. It is curre
 2. Club Event APIs:
   To get list of events posted by various clubs at Amrita, send a GET request to
 
-  Retrieves the list of clubs
+  Retrieves the list of clubs:
   
   >https://amritatoday.herokuapp.com/api/v1.0/clubs
 
@@ -40,7 +40,7 @@ AmritaToday's backend is built using the python web framework Flask. It is curre
   
   Create New events:
 
-  To create new events, send a post request to:
+  To create new events, send a POST request to:
   
   >https://amritatoday.herokuapp.com/api/v1.0/events
   
