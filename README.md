@@ -36,3 +36,33 @@ AmritaToday's backend is built using the python web framework Flask. It is curre
   >Eg: https://amritatoday.herokuapp.com/api/v1.0/events?club=Srishti
   
   >Eg: https://amritatoday.herokuapp.com/api/v1.0/events?club=Srishti&club=Sahaya
+  
+  Create New events:
+
+  To create new events, send a post request to:
+  
+  >https://amritatoday.herokuapp.com/api/v1.0/events
+  
+  with body:
+
+  ```
+  {
+        "club": "clubname", 
+        "event": "eventname",
+        "description": "event description",
+        "date": "event start date & time",  eg: 2016-04-12 04:00 PM
+        "end_date": "event end date & time", eg: 2016-04-12 06:00 PM
+        "venue": "AM Hall"
+  } 
+  ```
+  
+  ```
+  {
+        "club": "Sahaya", 
+        "event": "Mime",
+        "description": "Fun and Frolic!",
+        "date": "Tue, 12 Apr 2016 07:00:00 GMT", 
+        "end_date": "Fri, 15 Apr 2016 07:00:00 GMT", 
+        "venue": "AM Hall"
+  } 
+  ```
