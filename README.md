@@ -31,7 +31,7 @@ AmritaToday's backend is built using the python web framework Flask. It is curre
   
   Retrieves events of specific clubs:
   ```
-  >https://amritatoday.herokuapp.com/api/v1.0/events?club=clubname
+  https://amritatoday.herokuapp.com/api/v1.0/events?club=clubname
   ```
   
   >Eg: https://amritatoday.herokuapp.com/api/v1.0/events?club=Srishti
