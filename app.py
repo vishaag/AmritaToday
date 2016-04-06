@@ -10,9 +10,12 @@ import os
 
 app = Flask(__name__)
 api = Api(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/amritatoday'
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/amritatoday'
 db = SQLAlchemy(app)
+
+
+##ADD time field in canteens tables in heroku.
 
 
 #ThingsTODO
@@ -20,6 +23,10 @@ db = SQLAlchemy(app)
 #2. Count functionality
 
 #3. PUT, DELETE FOR Clubs (add/delete new clubs)
+
+#4. ADD post time for menu DB, POST
+
+#5. Query based params for Menu
 
 
 ##########################################################################################
@@ -32,6 +39,7 @@ class Main(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     item = db.Column(db.String(20), unique=True)
     price = db.Column(db.Integer)
+    time = db.Column(db.DateTime)
     rating = db.Column(db.Float)
     category = db.Column(db.String(20))
 
@@ -40,6 +48,7 @@ class MBA(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     item = db.Column(db.String(20), unique=True)
     price = db.Column(db.Integer)
+    time = db.Column(db.DateTime)
     rating = db.Column(db.Float)
     category = db.Column(db.String(20))
 
@@ -48,6 +57,7 @@ class IT(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     item = db.Column(db.String(20), unique=True)
     price = db.Column(db.Integer)
+    time = db.Column(db.DateTime)
     rating = db.Column(db.Float)
     category = db.Column(db.String(20))
 #End of Canteen Class models
@@ -75,6 +85,19 @@ class ClubEvents(db.Model):
     count = db.Column(db.Integer)
 #End of ClubEvent Class models
 
+#Buy/Sell Class models
+class BuySell(db.Model):
+    __tablename__ = "buysell"
+    id = db.Column(db.Integer, primary_key=True)
+    item = db.Column(db.String(20))
+    category = db.Column(db.String(20))
+    price = db.Column(db.Integer)
+    orig_price = db.Column(db.Integer)
+    description = db.Column(db.String(200))
+    email = db.Column(db.String(50))
+    phone = db.Column(db.Integer)
+#End of Buy/Sell Class models
+
 
 ##########################################################################################
 # HTTP verbs' definitions #
@@ -96,7 +119,8 @@ class MainMenuListAPI(Resource):
         item = data['item']
         price = data['price']
         category = data['category']
-        MainMenuADD = Main(item=item,price=price,category=category)
+        time = data['time']
+        MainMenuADD = Main(item=item,price=price,time=time,category=category)
         db.session.add(MainMenuADD)
         db.session.commit()
         return 201
@@ -115,7 +139,8 @@ class MBAMenuListAPI(Resource):
         item = data['item']
         price = data['price']
         category = data['category']
-        MBAMenuADD = MBA(item=item,price=price,category=category)
+        time = data['time']
+        MBAMenuADD = MBA(item=item,price=price, time=time, category=category)
         db.session.add(MBAMenuADD)
         db.session.commit()
         return 201
@@ -134,7 +159,8 @@ class ITMenuListAPI(Resource):
         item = data['item']
         price = data['price']
         category = data['category']
-        ITMenuADD = IT(item=item,price=price,category=category)
+        time = data['time']
+        ITMenuADD = IT(item=item, price=price, time=time, category=category)
         db.session.add(ITMenuADD)
         db.session.commit()
         return 201
@@ -156,6 +182,7 @@ class MainMenuAPI(Resource):
         MainMenuUpdate.item = data['item']
         MainMenuUpdate.price = data['price']
         MainMenuUpdate.category = data['category']
+        MainMenuUpdate.time = data['time']
         db.session.add(MainMenuUpdate)
         db.session.commit()
         return 201
@@ -179,6 +206,7 @@ class MBAMenuAPI(Resource):
         MBAMenuUpdate.item = data['item']
         MBAMenuUpdate.price = data['price']
         MBAMenuUpdate.category = data['category']
+        MBAMenuUpdate.time = data['time']
         db.session.add(MBAMenuUpdate)
         db.session.commit()
         return 201
@@ -202,6 +230,7 @@ class ITMenuAPI(Resource):
         ITMenuUpdate.item = data['item']
         ITMenuUpdate.price = data['price']
         ITMenuUpdate.category = data['category']
+        MBAMenuUpdate.time = data['time']
         db.session.add(ITMenuUpdate)
         db.session.commit()
         return 201
@@ -297,7 +326,53 @@ class ClubEventsAPI(Resource):
 #End of ClubEvent Defintions
 
 #Start of BuySell Definitions
+class BuyListAPI(Resource):
+    def get(self):
+        BuyList=[]
+        for u in BuySell.query.all():
+            BuyList.append(u.__dict__)
+        for i in range(len(BuyList)):
+            del BuyList[i]['_sa_instance_state'] #Delete uncessary parameter in return object
+        return jsonify({'BuyList':(BuyList) })     
 
+
+class SellAPI(Resource):
+    def post(self):
+        data = request.json
+        item = data['item']
+        category = data['category']
+        price = data['price']
+        orig_price = data['orig_price']
+        description = data['description']
+        email = data['email']
+        phone = data['phone']
+
+        BuySellADD = BuySell(item=item, category=category, price=price, orig_price=orig_price, description=description, email=email, phone=phone)
+        db.session.add(BuySellADD)
+        db.session.commit()
+        return 201
+
+
+class SellModAPI(Resource):
+    def put(self,id):    
+        data=request.json
+        BuySellUpdate = BuySell.query.filter_by(id=id).first()
+        BuySellUpdate.item = data['item']
+        BuySellUpdate.category = data['category']
+        BuySellUpdate.price = data['price']
+        BuySellUpdate.orig_price = data['orig_price']
+        BuySellUpdate.description = data['description']
+        BuySellUpdate.email = data['email']
+        BuySellUpdate.phone = data['phone']
+
+        db.session.add(BuySellUpdate)
+        db.session.commit()
+        return 201
+
+    def delete(self,id):
+        BuySell.query.filter_by(id=id).delete()
+        db.session.commit()
+        return 201 #Remember to return error code if entry is NOT deleted from DB
 #End of BuySell Definitions
 
 
@@ -308,7 +383,6 @@ class ClubEventsAPI(Resource):
 ##########################################################################################
 
 ##CANTEEN
-
 #GET (LIST), POST 
 api.add_resource(MainMenuListAPI,'/api/v1.0/menu/main')
 api.add_resource(MBAMenuListAPI,'/api/v1.0/menu/mba')
@@ -321,22 +395,21 @@ api.add_resource(ITMenuAPI,'/api/v1.0/menu/it/<int:id>')
 
 
 ##CLUBS
-
 #GET (LIST), POST 
 api.add_resource(ClubEventsListAPI,'/api/v1.0/events') #list of all events eg: /api/v1.0/events returns all events. Or, eg: /api/v1.0/events?club=T{know} returns events of T{know} alone
-
 #GET (ID), PUT, DELETE
 api.add_resource(ClubEventsAPI,'/api/v1.0/events/<int:id>') #events based on id
 #GET ONLY - ClusListAPI
 api.add_resource(ClubsListAPI,'/api/v1.0/clubs')  #for list of clubs
-
-
 ##END CLUBS APIS
-    
 
 ##BUYSELL
-
-
+#GET
+api.add_resource(BuyListAPI,'/api/v1.0/buy')
+#POST
+api.add_resource(SellAPI,'/api/v1.0/sell')
+#PUT, DELETE
+api.add_resource(SellModAPI,'/api/v1.0/sell/<int:id>')
 ##END BUY SELL APIS
 
 if __name__ == '__main__':
