@@ -17,7 +17,6 @@ db = SQLAlchemy(app)
 
 ##ADD time field in canteens tables in heroku.
 
-
 #ThingsTODO
 #1. Default value for rating and event count.
 #2. Count functionality
