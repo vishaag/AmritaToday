@@ -67,3 +67,49 @@ AmritaToday's backend is built using the python web framework Flask. It is curre
         "venue": "AM Hall"
   } 
   ```
+
+
+
+3.  Buy/Sell APIs:
+
+    To buy and sell items - for people at Amrita.
+    
+    To retrieve list of items put for sale, send a GET request to:
+    
+    >https://amritatoday.herokuapp.com/api/v1.0/buy
+    
+    To post for a sale a new item, send a POST request to:
+    
+    >https://amritatoday.herokuapp.com/api/v1.0/sell
+    
+    with body:
+    
+  ```
+    {
+
+    "item": "itemname",
+    "category": "category",
+    "price": price in rs,
+    "orig_price": price in rs,
+    "description": "Why do you want to sell this?",
+    "email": "seller's email id",
+    "phone": "sellers phone number"
+
+    }
+  ```
+    Eg:
+    
+  ```
+    {
+
+    "item": "Shirt",
+    "category": "Clothes",
+    "price": 500,
+    "orig_price": 1000,
+    "description": "I got big!",
+    "email": "vishaag@gmail.com",
+    "phone": "9876543210"
+
+    }
+  ```
+
