@@ -3,7 +3,7 @@ AmritaToday is an Android based application which connects the people in Amrita 
 
 1. Canteen Menu APIs - A crowdsource based implementation for anyone in Amrita to see and post data about the present items availabe in all 3 canteens.(v1.0 implemented)
 2. Clubs@Amrita - Enables everyone to view the upcoming events by various clubs at Amrita. Also provides heads of clubs to create new events.(v1.0 implemented)
-3. Buy/Sell@Amrita - Buy/Sell things at Amrita. No money transactions, only details and contact. (Yet to be implemented)
+3. Buy/Sell@Amrita - Buy/Sell things at Amrita. No money transactions, only details and contact. (v1.0 implemented)
 
 # Tech
 AmritaToday's backend is built using the python web framework Flask. It is current hosted on Heroku (free plan). It uses the PostgreSQL for its database.
@@ -54,6 +54,7 @@ AmritaToday's backend is built using the python web framework Flask. It is curre
         "date": "event start date & time",  eg: 2016-04-12 04:00 PM
         "end_date": "event end date & time", eg: 2016-04-12 06:00 PM
         "venue": "AM Hall"
+        "poster":"poster link" eg: www.sahaya.com/poster
   } 
   ```
   Eg:
@@ -65,6 +66,7 @@ AmritaToday's backend is built using the python web framework Flask. It is curre
         "date": "Tue, 12 Apr 2016 07:00:00 GMT", 
         "end_date": "Fri, 15 Apr 2016 07:00:00 GMT", 
         "venue": "AM Hall"
+        "poster":"www.sahaya.com/poster"
   } 
   ```
 
